@@ -1,0 +1,49 @@
+{
+  "film": "_calibration-bad-slideshow",
+  "title": "Calibration Failure — Slideshow Cuts & Uniform Rhythm",
+  "brand": "obsidian-tech",
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "resolution": { "width": 1920, "height": 1080 },
+  "seed": 11,
+  "beats": [
+    {
+      "id": "b1-slide1",
+      "start": 0.0,
+      "duration": 2.0,
+      "heroActor": "cardA",
+      "actors": ["cardA", "cornerLogo"],
+      "camera": { "preset": "hold", "target": "stage", "x": 0, "y": 0, "zoom": 1.0, "floatIntensity": 0 },
+      "handoff": {
+        "carryActor": "cardA",
+        "targetActor": "cardB",
+        "mode": "morph",
+        "windowSec": 0.4,
+        "curve": "linear"
+      }
+    },
+    {
+      "id": "b2-slide2",
+      "start": 2.0,
+      "duration": 2.0,
+      "heroActor": "cardB",
+      "actors": ["cardB", "cornerLogo"],
+      "camera": { "preset": "hold", "target": "stage", "x": 0, "y": 0, "zoom": 1.0, "floatIntensity": 0 },
+      "handoff": {
+        "carryActor": "cornerLogo",
+        "targetActor": "cornerLogo",
+        "mode": "morph",
+        "windowSec": 0.4,
+        "curve": "linear"
+      }
+    },
+    {
+      "id": "b3-slide3",
+      "start": 4.0,
+      "duration": 2.0,
+      "heroActor": "cardC",
+      "actors": ["cardC", "cornerLogo"],
+      "camera": { "preset": "hold", "target": "stage", "x": 500, "y": 0, "zoom": 1.0, "entryBlendSec": 0, "floatIntensity": 0 }
+    }
+  ]
+}

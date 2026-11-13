@@ -1,0 +1,150 @@
+{
+  "film": "01-single-seed",
+  "title": "Unbroken Motion — 01 Single Seed Transformation",
+  "brand": "obsidian-tech",
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "resolution": {
+    "width": 1920,
+    "height": 1080
+  },
+  "seed": 101,
+  "audio": {
+    "useAmbientBed": true,
+    "autoSfx": true
+  },
+  "beats": [
+    {
+      "id": "b1-seed",
+      "label": "Seed Ignition",
+      "start": 0.0,
+      "duration": 1.2,
+      "heroActor": "seedDot",
+      "actors": ["seedDot", "promptBar"],
+      "camera": {
+        "preset": "follow",
+        "target": "seedDot",
+        "zoom": 1.12,
+        "entryBlendSec": 0.4,
+        "settleSec": 0.25
+      },
+      "handoff": {
+        "carryActor": "seedDot",
+        "targetActor": "promptBar",
+        "mode": "morph",
+        "windowSec": 0.56,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 0.14, "type": "pop", "intensity": 0.72 },
+        { "atSec": 0.96, "type": "whoosh-soft", "intensity": 0.68 }
+      ]
+    },
+    {
+      "id": "b2-command",
+      "label": "Command Intent",
+      "start": 1.2,
+      "duration": 3.6,
+      "heroActor": "promptBar",
+      "actors": ["seedDot", "promptBar", "intentChip", "tetherBeam", "tetherOrb"],
+      "camera": {
+        "preset": "hold",
+        "target": "promptBar",
+        "zoom": 1.0,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "tetherOrb",
+        "targetActor": "tetherOrb",
+        "mode": "tether",
+        "windowSec": 0.54,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 2.05, "type": "tick", "intensity": 0.58 },
+        { "atSec": 2.45, "type": "tick", "intensity": 0.58 },
+        { "atSec": 2.95, "type": "click", "intensity": 0.78 },
+        { "atSec": 4.62, "type": "whoosh", "intensity": 0.85 }
+      ]
+    },
+    {
+      "id": "b3-whip-canvas",
+      "label": "Whip to Canvas",
+      "start": 4.8,
+      "duration": 1.4,
+      "heroActor": "canvasShell",
+      "actors": ["promptBar", "tetherBeam", "tetherOrb", "canvasShell"],
+      "camera": {
+        "preset": "whip",
+        "target": "canvasShell",
+        "zoom": 1.04,
+        "entryBlendSec": 0.56,
+        "settleSec": 0.38
+      },
+      "handoff": {
+        "carryActor": "canvasShell",
+        "targetActor": "architectureDeck",
+        "mode": "portal",
+        "windowSec": 0.6,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 5.06, "type": "impact", "intensity": 0.84 },
+        { "atSec": 6.0, "type": "riser", "intensity": 0.72 }
+      ]
+    },
+    {
+      "id": "b4-portal-deck",
+      "label": "Portal Architecture",
+      "start": 6.2,
+      "duration": 4.1,
+      "heroActor": "architectureDeck",
+      "actors": [
+        "canvasShell",
+        "architectureDeck",
+        "cardLatency",
+        "cardCarry",
+        "cardAudio"
+      ],
+      "camera": {
+        "preset": "pushThrough",
+        "target": "architectureDeck",
+        "zoom": 1.0,
+        "entryBlendSec": 0.6,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "architectureDeck",
+        "targetActor": "brandMark",
+        "mode": "collapse",
+        "windowSec": 0.62,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 6.45, "type": "impact", "intensity": 0.88 },
+        { "atSec": 7.1, "type": "pop", "intensity": 0.65 },
+        { "atSec": 7.35, "type": "pop", "intensity": 0.65 },
+        { "atSec": 10.12, "type": "whoosh-soft", "intensity": 0.72 }
+      ]
+    },
+    {
+      "id": "b5-resolve",
+      "label": "Unified Mark",
+      "start": 10.3,
+      "duration": 2.3,
+      "heroActor": "brandMark",
+      "actors": ["architectureDeck", "brandMark"],
+      "camera": {
+        "preset": "hold",
+        "target": "brandMark",
+        "zoom": 1.05,
+        "entryBlendSec": 0.58,
+        "settleSec": 0.45
+      },
+      "audioEvents": [
+        { "atSec": 10.62, "type": "impact", "intensity": 0.86 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "film": "03-brand-reel-vertical",
+  "title": "Atelier Sunlit — Vertical Brand Reel",
+  "brand": "warm-editorial",
+  "fps": 30,
+  "aspectRatio": "9:16",
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "seed": 303,
+  "audio": {
+    "useAmbientBed": true,
+    "autoSfx": true
+  },
+  "beats": [
+    {
+      "id": "b1-seed",
+      "label": "Editorial Seed",
+      "start": 0.0,
+      "duration": 1.2,
+      "heroActor": "terracottaSeed",
+      "actors": ["terracottaSeed", "storyBar"],
+      "camera": {
+        "preset": "follow",
+        "target": "terracottaSeed",
+        "zoom": 1.08,
+        "entryBlendSec": 0.4,
+        "settleSec": 0.25
+      },
+      "handoff": {
+        "carryActor": "terracottaSeed",
+        "targetActor": "storyBar",
+        "mode": "morph",
+        "windowSec": 0.56,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 0.16, "type": "pop", "intensity": 0.7 },
+        { "atSec": 0.96, "type": "whoosh-soft", "intensity": 0.65 }
+      ]
+    },
+    {
+      "id": "b2-caption",
+      "label": "Atelier Prompt & Tether",
+      "start": 1.2,
+      "duration": 3.5,
+      "heroActor": "storyBar",
+      "actors": ["terracottaSeed", "storyBar", "editionBadge", "tetherBeam", "tetherOrb"],
+      "camera": {
+        "preset": "hold",
+        "target": "storyBar",
+        "zoom": 1.02,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "tetherOrb",
+        "targetActor": "tetherOrb",
+        "mode": "tether",
+        "windowSec": 0.52,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 1.9, "type": "tick", "intensity": 0.55 },
+        { "atSec": 2.35, "type": "tick", "intensity": 0.55 },
+        { "atSec": 2.95, "type": "click", "intensity": 0.78 },
+        { "atSec": 4.5, "type": "whoosh", "intensity": 0.85 }
+      ]
+    },
+    {
+      "id": "b3-whip-phone",
+      "label": "Vertical Whip to Phone",
+      "start": 4.7,
+      "duration": 1.3,
+      "heroActor": "phoneShowcase",
+      "actors": ["storyBar", "tetherBeam", "tetherOrb", "phoneShowcase"],
+      "camera": {
+        "preset": "whip",
+        "target": "phoneShowcase",
+        "zoom": 1.02,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.36
+      },
+      "handoff": {
+        "carryActor": "phoneShowcase",
+        "targetActor": "editorialCanvas",
+        "mode": "portal",
+        "windowSec": 0.58,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 4.96, "type": "impact", "intensity": 0.82 },
+        { "atSec": 5.8, "type": "riser", "intensity": 0.68 }
+      ]
+    },
+    {
+      "id": "b4-portal-atelier",
+      "label": "Portal Editorial Feature",
+      "start": 6.0,
+      "duration": 4.1,
+      "heroActor": "editorialCanvas",
+      "actors": [
+        "phoneShowcase",
+        "editorialCanvas",
+        "editorialCardA",
+        "editorialCardB",
+        "editorialCardC"
+      ],
+      "camera": {
+        "preset": "pushThrough",
+        "target": "editorialCanvas",
+        "zoom": 1.0,
+        "entryBlendSec": 0.58,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "editorialCanvas",
+        "targetActor": "atelierMark",
+        "mode": "collapse",
+        "windowSec": 0.62,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 6.26, "type": "impact", "intensity": 0.84 },
+        { "atSec": 6.85, "type": "pop", "intensity": 0.6 },
+        { "atSec": 7.1, "type": "pop", "intensity": 0.6 },
+        { "atSec": 9.9, "type": "whoosh-soft", "intensity": 0.7 }
+      ]
+    },
+    {
+      "id": "b5-atelier-resolve",
+      "label": "ATELIER Brand Signature",
+      "start": 10.1,
+      "duration": 2.3,
+      "heroActor": "atelierMark",
+      "actors": ["editorialCanvas", "atelierMark"],
+      "camera": {
+        "preset": "hold",
+        "target": "atelierMark",
+        "zoom": 1.04,
+        "entryBlendSec": 0.58,
+        "settleSec": 0.45
+      },
+      "audioEvents": [
+        { "atSec": 10.42, "type": "impact", "intensity": 0.86 }
+      ]
+    }
+  ]
+}

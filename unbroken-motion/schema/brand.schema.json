@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unbroken-motion.local/schema/brand.schema.json",
+  "title": "Unbroken Motion Brand Manifest",
+  "description": "Strictly isolated visual, typographic, and motion personality tokens for one brand.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "colors",
+    "typography",
+    "geometry",
+    "logo",
+    "motionPersonality",
+    "forbiddenColors"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "background",
+        "surface",
+        "surfaceElevated",
+        "primary",
+        "secondary",
+        "accent",
+        "textPrimary",
+        "textMuted",
+        "border",
+        "onPrimary"
+      ],
+      "properties": {
+        "background": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "surface": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "surfaceElevated": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "secondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "textPrimary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "textMuted": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "border": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" },
+        "onPrimary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["headingFont", "bodyFont", "monoFont", "headingWeight", "bodyWeight"],
+      "properties": {
+        "headingFont": { "type": "string", "minLength": 1 },
+        "bodyFont": { "type": "string", "minLength": 1 },
+        "monoFont": { "type": "string", "minLength": 1 },
+        "headingWeight": { "type": "integer", "minimum": 400, "maximum": 900 },
+        "bodyWeight": { "type": "integer", "minimum": 300, "maximum": 700 }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["radiusSm", "radiusMd", "radiusLg", "borderWidth"],
+      "properties": {
+        "radiusSm": { "type": "number", "minimum": 0 },
+        "radiusMd": { "type": "number", "minimum": 0 },
+        "radiusLg": { "type": "number", "minimum": 0 },
+        "borderWidth": { "type": "number", "minimum": 0 }
+      }
+    },
+    "logo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wordmark", "tagline", "markShape", "minClearSpaceRatio"],
+      "properties": {
+        "wordmark": { "type": "string", "minLength": 1 },
+        "tagline": { "type": "string" },
+        "markShape": { "type": "string", "enum": ["prism", "orbit", "monolith", "wave"] },
+        "minClearSpaceRatio": { "type": "number", "minimum": 0.1, "maximum": 1.0 }
+      }
+    },
+    "motionPersonality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style", "defaultCurve", "cameraFloatIntensity"],
+      "properties": {
+        "style": { "type": "string", "enum": ["snappy", "calm", "playful", "authoritative"] },
+        "defaultCurve": { "type": "string", "enum": ["snappy", "soft", "heavy", "overshoot"] },
+        "cameraFloatIntensity": { "type": "number", "minimum": 0, "maximum": 1.5 }
+      }
+    },
+    "forbiddenColors": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$" }
+    }
+  }
+}

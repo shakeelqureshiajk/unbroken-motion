@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unbroken-motion.local/schema/beats.schema.json",
+  "title": "Unbroken Motion Beat Sheet",
+  "description": "Deterministic beat sheet defining continuous single-camera scenes, carry handoffs, and audio events.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["film", "brand", "fps", "aspectRatio", "resolution", "seed", "beats"],
+  "properties": {
+    "film": {
+      "type": "string",
+      "pattern": "^[a-z0-9_][a-z0-9_-]*$",
+      "description": "Slug identifying this film workspace."
+    },
+    "title": {
+      "type": "string"
+    },
+    "brand": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Brand ID matching references/brands/<brand>.md."
+    },
+    "fps": {
+      "type": "integer",
+      "enum": [24, 30, 60]
+    },
+    "aspectRatio": {
+      "type": "string",
+      "enum": ["16:9", "9:16", "1:1"]
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 320, "maximum": 7680 },
+        "height": { "type": "integer", "minimum": 320, "maximum": 4320 }
+      }
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Fixed integer seed for deterministic simplex float and jitter."
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "musicPath": { "type": ["string", "null"] },
+        "useAmbientBed": { "type": "boolean" },
+        "autoSfx": { "type": "boolean" }
+      }
+    },
+    "beats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "start", "duration", "camera", "actors"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "start": { "type": "number", "minimum": 0 },
+          "duration": { "type": "number", "minimum": 0.4 },
+          "heroActor": { "type": "string", "minLength": 1 },
+          "actors": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "camera": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["preset", "target", "zoom"],
+            "properties": {
+              "preset": {
+                "type": "string",
+                "enum": ["follow", "whip", "pushThrough", "float", "shake", "hold"]
+              },
+              "target": { "type": "string", "minLength": 1 },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "zoom": { "type": "number", "minimum": 0.1, "maximum": 20 },
+              "roll": { "type": "number", "minimum": -45, "maximum": 45 },
+              "entryBlendSec": { "type": "number", "minimum": 0 },
+              "settleSec": { "type": "number", "minimum": 0 },
+              "floatIntensity": { "type": "number", "minimum": 0, "maximum": 2 },
+              "shakeAtSec": { "type": "number", "minimum": 0 },
+              "shakeIntensity": { "type": "number", "minimum": 0, "maximum": 40 }
+            }
+          },
+          "handoff": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["carryActor", "targetActor", "mode", "windowSec", "curve"],
+            "properties": {
+              "carryActor": { "type": "string", "minLength": 1 },
+              "targetActor": { "type": "string", "minLength": 1 },
+              "mode": {
+                "type": "string",
+                "enum": ["morph", "portal", "detach", "tether", "collapse"]
+              },
+              "windowSec": { "type": "number", "minimum": 0.2 },
+              "curve": {
+                "type": "string",
+                "enum": ["snappy", "soft", "heavy", "overshoot", "whipQuart", "linear"]
+              }
+            }
+          },
+          "audioEvents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["atSec", "type", "intensity"],
+              "properties": {
+                "atSec": { "type": "number", "minimum": 0 },
+                "type": {
+                  "type": "string",
+                  "enum": ["impact", "whoosh", "whoosh-soft", "click", "pop", "tick", "riser"]
+                },
+                "intensity": { "type": "number", "minimum": 0.05, "maximum": 1.5 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

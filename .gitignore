@@ -1,0 +1,11 @@
+node_modules/
+**/out/
+**/audio/
+**/stills/
+**/.remotion/
+**/.final-passes/
+**/.tmp/
+**/manifest.json
+**/render.log
+.DS_Store
+Thumbs.db

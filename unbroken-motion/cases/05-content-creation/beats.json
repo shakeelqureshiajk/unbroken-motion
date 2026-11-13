@@ -1,0 +1,219 @@
+{
+  "film": "05-content-creation",
+  "title": "Content Creation - From Idea to Publish",
+  "brand": "content-studio",
+  "fps": 30,
+  "aspectRatio": "9:16",
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "seed": 505,
+  "audio": {
+    "useAmbientBed": true,
+    "autoSfx": true
+  },
+  "beats": [
+    {
+      "id": "b1-seed",
+      "label": "Idea Spark",
+      "start": 0,
+      "duration": 1.452,
+      "heroActor": "terracottaSeed",
+      "actors": [
+        "terracottaSeed",
+        "storyBar"
+      ],
+      "camera": {
+        "preset": "follow",
+        "target": "terracottaSeed",
+        "zoom": 1.08,
+        "entryBlendSec": 0.484,
+        "settleSec": 0.302
+      },
+      "handoff": {
+        "carryActor": "terracottaSeed",
+        "targetActor": "storyBar",
+        "mode": "morph",
+        "windowSec": 0.677,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        {
+          "atSec": 0.194,
+          "type": "pop",
+          "intensity": 0.7
+        },
+        {
+          "atSec": 1.161,
+          "type": "whoosh-soft",
+          "intensity": 0.65
+        }
+      ]
+    },
+    {
+      "id": "b2-caption",
+      "label": "Idea Becomes a Script",
+      "start": 1.452,
+      "duration": 4.233,
+      "heroActor": "storyBar",
+      "actors": [
+        "terracottaSeed",
+        "storyBar",
+        "editionBadge",
+        "tetherBeam",
+        "tetherOrb"
+      ],
+      "camera": {
+        "preset": "hold",
+        "target": "storyBar",
+        "zoom": 1.02,
+        "entryBlendSec": 0.653,
+        "settleSec": 0.423
+      },
+      "handoff": {
+        "carryActor": "tetherOrb",
+        "targetActor": "tetherOrb",
+        "mode": "tether",
+        "windowSec": 0.629,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        {
+          "atSec": 2.298,
+          "type": "tick",
+          "intensity": 0.55
+        },
+        {
+          "atSec": 2.843,
+          "type": "tick",
+          "intensity": 0.55
+        },
+        {
+          "atSec": 3.569,
+          "type": "click",
+          "intensity": 0.78
+        },
+        {
+          "atSec": 5.444,
+          "type": "whoosh",
+          "intensity": 0.85
+        }
+      ]
+    },
+    {
+      "id": "b3-whip-phone",
+      "label": "Whip to Recording Phone",
+      "start": 5.685,
+      "duration": 1.573,
+      "heroActor": "phoneShowcase",
+      "actors": [
+        "storyBar",
+        "tetherBeam",
+        "tetherOrb",
+        "phoneShowcase"
+      ],
+      "camera": {
+        "preset": "whip",
+        "target": "phoneShowcase",
+        "zoom": 1.02,
+        "entryBlendSec": 0.653,
+        "settleSec": 0.435
+      },
+      "handoff": {
+        "carryActor": "phoneShowcase",
+        "targetActor": "editorialCanvas",
+        "mode": "portal",
+        "windowSec": 0.702,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        {
+          "atSec": 6,
+          "type": "impact",
+          "intensity": 0.82
+        },
+        {
+          "atSec": 7.016,
+          "type": "riser",
+          "intensity": 0.68
+        }
+      ]
+    },
+    {
+      "id": "b4-portal-atelier",
+      "label": "Create - Edit - Publish",
+      "start": 7.258,
+      "duration": 4.96,
+      "heroActor": "editorialCanvas",
+      "actors": [
+        "phoneShowcase",
+        "editorialCanvas",
+        "editorialCardA",
+        "editorialCardB",
+        "editorialCardC"
+      ],
+      "camera": {
+        "preset": "pushThrough",
+        "target": "editorialCanvas",
+        "zoom": 1,
+        "entryBlendSec": 0.702,
+        "settleSec": 0.423
+      },
+      "handoff": {
+        "carryActor": "editorialCanvas",
+        "targetActor": "atelierMark",
+        "mode": "collapse",
+        "windowSec": 0.75,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        {
+          "atSec": 7.573,
+          "type": "impact",
+          "intensity": 0.84
+        },
+        {
+          "atSec": 8.286,
+          "type": "pop",
+          "intensity": 0.6
+        },
+        {
+          "atSec": 8.589,
+          "type": "pop",
+          "intensity": 0.6
+        },
+        {
+          "atSec": 11.976,
+          "type": "whoosh-soft",
+          "intensity": 0.7
+        }
+      ]
+    },
+    {
+      "id": "b5-atelier-resolve",
+      "label": "Creator Signature",
+      "start": 12.218,
+      "duration": 2.782,
+      "heroActor": "atelierMark",
+      "actors": [
+        "editorialCanvas",
+        "atelierMark"
+      ],
+      "camera": {
+        "preset": "hold",
+        "target": "atelierMark",
+        "zoom": 1.04,
+        "entryBlendSec": 0.702,
+        "settleSec": 0.544
+      },
+      "audioEvents": [
+        {
+          "atSec": 12.605,
+          "type": "impact",
+          "intensity": 0.86
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "film": "smoke-test",
+  "title": "Smoke Test — Seed to Command Bar",
+  "brand": "obsidian-tech",
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "resolution": { "width": 1920, "height": 1080 },
+  "seed": 42,
+  "audio": {
+    "musicPath": null,
+    "useAmbientBed": true,
+    "autoSfx": true
+  },
+  "beats": [
+    {
+      "id": "b1-spark",
+      "label": "Seed Pulse",
+      "start": 0.0,
+      "duration": 1.1,
+      "heroActor": "seedDot",
+      "actors": ["seedDot"],
+      "camera": {
+        "preset": "follow",
+        "target": "seedDot",
+        "zoom": 1.0,
+        "floatIntensity": 0.65
+      },
+      "handoff": {
+        "carryActor": "seedDot",
+        "targetActor": "commandBar",
+        "mode": "morph",
+        "windowSec": 0.54,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 0.12, "type": "pop", "intensity": 0.65 },
+        { "atSec": 1.05, "type": "whoosh-soft", "intensity": 0.75 }
+      ]
+    },
+    {
+      "id": "b2-command",
+      "label": "Command Input",
+      "start": 1.1,
+      "duration": 3.1,
+      "heroActor": "commandBar",
+      "actors": ["commandBar", "statusBadge"],
+      "camera": {
+        "preset": "follow",
+        "target": "stage",
+        "x": 95,
+        "y": -20,
+        "zoom": 1.16,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.5,
+        "floatIntensity": 0.85
+      },
+      "handoff": {
+        "carryActor": "commandBar",
+        "targetActor": "statusBadge",
+        "mode": "collapse",
+        "windowSec": 0.54,
+        "curve": "heavy"
+      },
+      "audioEvents": [
+        { "atSec": 1.75, "type": "tick", "intensity": 0.45 },
+        { "atSec": 2.35, "type": "click", "intensity": 0.6 },
+        { "atSec": 4.15, "type": "whoosh-soft", "intensity": 0.7 }
+      ]
+    },
+    {
+      "id": "b3-resolve",
+      "label": "Verified Badge",
+      "start": 4.2,
+      "duration": 1.6,
+      "heroActor": "statusBadge",
+      "actors": ["statusBadge"],
+      "camera": {
+        "preset": "hold",
+        "target": "statusBadge",
+        "zoom": 1.04,
+        "entryBlendSec": 0.54,
+        "shakeAtSec": 0.3,
+        "shakeIntensity": 6,
+        "floatIntensity": 0.4
+      },
+      "audioEvents": [
+        { "atSec": 4.5, "type": "impact", "intensity": 0.85 }
+      ]
+    }
+  ]
+}

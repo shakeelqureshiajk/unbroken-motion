@@ -1,0 +1,111 @@
+{
+  "film": "_calibration-good-carry",
+  "title": "Calibration Pass — Morph + Tether Whip + Portal PushThrough",
+  "brand": "obsidian-tech",
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "resolution": { "width": 1920, "height": 1080 },
+  "seed": 77,
+  "audio": { "useAmbientBed": true, "autoSfx": true },
+  "beats": [
+    {
+      "id": "b1-seed",
+      "label": "Seed Orb",
+      "start": 0.0,
+      "duration": 1.2,
+      "heroActor": "seedOrb",
+      "actors": ["seedOrb"],
+      "camera": {
+        "preset": "follow",
+        "target": "seedOrb",
+        "zoom": 1.0,
+        "floatIntensity": 0.5
+      },
+      "handoff": {
+        "carryActor": "seedOrb",
+        "targetActor": "promptCard",
+        "mode": "morph",
+        "windowSec": 0.58,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 0.12, "type": "pop", "intensity": 0.65 },
+        { "atSec": 1.15, "type": "whoosh-soft", "intensity": 0.7 }
+      ]
+    },
+    {
+      "id": "b2-prompt",
+      "label": "Prompt Surface",
+      "start": 1.2,
+      "duration": 3.0,
+      "heroActor": "promptCard",
+      "actors": ["promptCard", "tetherPulse"],
+      "camera": {
+        "preset": "follow",
+        "target": "stage",
+        "x": 120,
+        "y": 0,
+        "zoom": 1.12,
+        "entryBlendSec": 0.58,
+        "floatIntensity": 0.7
+      },
+      "handoff": {
+        "carryActor": "tetherPulse",
+        "targetActor": "portalPanel",
+        "mode": "tether",
+        "windowSec": 0.54,
+        "curve": "whipQuart"
+      },
+      "audioEvents": [
+        { "atSec": 2.2, "type": "click", "intensity": 0.6 },
+        { "atSec": 4.15, "type": "whoosh", "intensity": 0.9 }
+      ]
+    },
+    {
+      "id": "b3-tether-land",
+      "label": "Whip Target Panel",
+      "start": 4.2,
+      "duration": 1.4,
+      "heroActor": "portalPanel",
+      "actors": ["portalPanel"],
+      "camera": {
+        "preset": "whip",
+        "target": "portalPanel",
+        "zoom": 1.15,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.4,
+        "floatIntensity": 0.4
+      },
+      "handoff": {
+        "carryActor": "portalPanel",
+        "targetActor": "portalPanel",
+        "mode": "portal",
+        "windowSec": 0.56,
+        "curve": "heavy"
+      },
+      "audioEvents": [
+        { "atSec": 5.55, "type": "whoosh-soft", "intensity": 0.85 }
+      ]
+    },
+    {
+      "id": "b4-portal-brand",
+      "label": "Portal Reveal",
+      "start": 5.6,
+      "duration": 3.5,
+      "heroActor": "brandResolve",
+      "actors": ["portalPanel", "brandResolve"],
+      "camera": {
+        "preset": "pushThrough",
+        "target": "portalPanel",
+        "zoom": 2.45,
+        "entryBlendSec": 0.56,
+        "shakeAtSec": 0.22,
+        "shakeIntensity": 5,
+        "floatIntensity": 0.4
+      },
+      "audioEvents": [
+        { "atSec": 5.82, "type": "impact", "intensity": 0.9 }
+      ]
+    }
+  ]
+}

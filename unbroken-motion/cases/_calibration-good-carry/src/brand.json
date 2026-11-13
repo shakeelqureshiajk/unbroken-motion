@@ -1,0 +1,47 @@
+{
+  "id": "obsidian-tech",
+  "name": "Obsidian Vector",
+  "colors": {
+    "background": "#070B12",
+    "surface": "#0F1624",
+    "surfaceElevated": "#182236",
+    "primary": "#38BDF8",
+    "secondary": "#6366F1",
+    "accent": "#2DD4BF",
+    "textPrimary": "#F1F5F9",
+    "textMuted": "#94A3B8",
+    "border": "#24324B",
+    "onPrimary": "#04111D"
+  },
+  "typography": {
+    "headingFont": "Segoe UI, Inter, system-ui, sans-serif",
+    "bodyFont": "Segoe UI, Inter, system-ui, sans-serif",
+    "monoFont": "Consolas, Cascadia Mono, monospace",
+    "headingWeight": 700,
+    "bodyWeight": 500
+  },
+  "geometry": {
+    "radiusSm": 8,
+    "radiusMd": 14,
+    "radiusLg": 22,
+    "borderWidth": 2
+  },
+  "logo": {
+    "wordmark": "VECTRA",
+    "tagline": "Precision workflows at speed",
+    "markShape": "prism",
+    "minClearSpaceRatio": 0.3
+  },
+  "motionPersonality": {
+    "style": "snappy",
+    "defaultCurve": "snappy",
+    "cameraFloatIntensity": 0.25
+  },
+  "forbiddenColors": [
+    "#FBF7F0",
+    "#F3ECE0",
+    "#D96B43",
+    "#2F2620",
+    "#1F5C4D"
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "film": "04-agentic-ai",
+  "title": "Agentic AI — Explained in One Continuous Shot",
+  "brand": "agentic-ai",
+  "fps": 30,
+  "aspectRatio": "16:9",
+  "resolution": {
+    "width": 1920,
+    "height": 1080
+  },
+  "seed": 404,
+  "audio": {
+    "useAmbientBed": true,
+    "autoSfx": true
+  },
+  "beats": [
+    {
+      "id": "b1-menu-select",
+      "label": "Goal Selected & Detached",
+      "start": 0.0,
+      "duration": 1.3,
+      "heroActor": "rowDeploy",
+      "actors": ["workspaceWin", "rowDeploy", "rowAudit", "rowShare", "cursor"],
+      "camera": {
+        "preset": "follow",
+        "target": "workspaceWin",
+        "zoom": 1.06,
+        "entryBlendSec": 0.4,
+        "settleSec": 0.3
+      },
+      "handoff": {
+        "carryActor": "rowDeploy",
+        "targetActor": "detachedChip",
+        "mode": "detach",
+        "windowSec": 0.52,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 0.25, "type": "pop", "intensity": 0.65 },
+        { "atSec": 0.96, "type": "click", "intensity": 0.82 }
+      ]
+    },
+    {
+      "id": "b2-command-dock",
+      "label": "Goal Becomes a Plan",
+      "start": 1.3,
+      "duration": 3.8,
+      "heroActor": "commandBar",
+      "actors": ["workspaceWin", "rowDeploy", "detachedChip", "commandBar", "cursor", "tetherBeam", "tetherOrb"],
+      "camera": {
+        "preset": "hold",
+        "target": "commandBar",
+        "zoom": 1.04,
+        "entryBlendSec": 0.52,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "tetherOrb",
+        "targetActor": "tetherOrb",
+        "mode": "tether",
+        "windowSec": 0.52,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 1.95, "type": "tick", "intensity": 0.56 },
+        { "atSec": 2.3, "type": "tick", "intensity": 0.56 },
+        { "atSec": 2.75, "type": "tick", "intensity": 0.56 },
+        { "atSec": 4.45, "type": "click", "intensity": 0.8 },
+        { "atSec": 4.92, "type": "whoosh", "intensity": 0.85 }
+      ]
+    },
+    {
+      "id": "b3-whip-preview",
+      "label": "Tool Call to Agent Loop",
+      "start": 5.1,
+      "duration": 1.2,
+      "heroActor": "previewShell",
+      "actors": ["commandBar", "tetherBeam", "tetherOrb", "previewShell"],
+      "camera": {
+        "preset": "whip",
+        "target": "previewShell",
+        "zoom": 1.04,
+        "entryBlendSec": 0.54,
+        "settleSec": 0.36
+      },
+      "handoff": {
+        "carryActor": "previewShell",
+        "targetActor": "dashShell",
+        "mode": "portal",
+        "windowSec": 0.58,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 5.36, "type": "impact", "intensity": 0.84 },
+        { "atSec": 6.1, "type": "riser", "intensity": 0.7 }
+      ]
+    },
+    {
+      "id": "b4-portal-dashboard",
+      "label": "Perceive · Reason · Act",
+      "start": 6.3,
+      "duration": 4.2,
+      "heroActor": "dashShell",
+      "actors": [
+        "previewShell",
+        "dashShell",
+        "kpiThroughput",
+        "kpiContinuity",
+        "kpiLoudness"
+      ],
+      "camera": {
+        "preset": "pushThrough",
+        "target": "dashShell",
+        "zoom": 1.0,
+        "entryBlendSec": 0.58,
+        "settleSec": 0.35
+      },
+      "handoff": {
+        "carryActor": "dashShell",
+        "targetActor": "finalMark",
+        "mode": "collapse",
+        "windowSec": 0.62,
+        "curve": "soft"
+      },
+      "audioEvents": [
+        { "atSec": 6.55, "type": "impact", "intensity": 0.86 },
+        { "atSec": 7.1, "type": "pop", "intensity": 0.62 },
+        { "atSec": 7.35, "type": "pop", "intensity": 0.62 },
+        { "atSec": 10.3, "type": "whoosh-soft", "intensity": 0.72 }
+      ]
+    },
+    {
+      "id": "b5-resolve",
+      "label": "Agentic AI Resolve",
+      "start": 10.5,
+      "duration": 2.3,
+      "heroActor": "finalMark",
+      "actors": ["dashShell", "finalMark"],
+      "camera": {
+        "preset": "hold",
+        "target": "finalMark",
+        "zoom": 1.05,
+        "entryBlendSec": 0.58,
+        "settleSec": 0.45
+      },
+      "audioEvents": [
+        { "atSec": 10.82, "type": "impact", "intensity": 0.86 }
+      ]
+    }
+  ]
+}
