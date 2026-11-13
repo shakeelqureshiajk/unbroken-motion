@@ -16,7 +16,7 @@ All notable changes to the `unbroken-motion` skill are documented in this file.
 - **De-duplicated Slim `examples/`:** Replaced full duplicate case folders (`8.8 MB`) with slim `examples/<slug>/{beats.json, src/scene.ts, src/brand.json}` (`~525 KB` uncompressed total skill size). `templates/starter/src` is now the single source of truth for `lib/`, `stage/`, and `compositions/`.
 - **Zero-Symlink Dependency Sharing:** Removed Windows junctions and POSIX symlinks from `scaffold.mjs`. Installing `node_modules` once in `<workspace>` shares Remotion across all films in `<workspace>/<film-slug>` via standard Node.js parent-directory lookup.
 - **Cross-Platform Compositor Lookup:** Updated `resolveFfmpegBinaries()` in `common.mjs` to resolve `@remotion/compositor-<platform>-<arch>` across `win32`, `darwin`, and `linux` (`x64`, `arm64`, `gnu`, `musl`).
-- **Agent-Neutral `SKILL.md` & Relative Links:** Removed agent-specific tool names (`read_file`) and local `file:///` paths across `SKILL.md` and `README.md`, and documented Tier 1 / Tier 2 runtime expectations.
+- **Agent-Neutral `SKILL.md` & Relative Links:** Removed agent-specific file-reading tool names and local absolute URI paths across `SKILL.md` and `README.md`, and documented Tier 1 / Tier 2 runtime expectations.
 
 ## [0.1.0] - 2026-11-13
 
