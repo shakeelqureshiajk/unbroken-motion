@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SFX_DIR, ensureDir, parseArgs } from './common.mjs';
+import { ensureDir, parseArgs, resolveSfxDir } from './common.mjs';
 
 const SAMPLE_RATE = 48000;
 
@@ -209,7 +209,7 @@ function genAmbientBed(durationSec = 20) {
   return { left, right };
 }
 
-export function ensureSfxBank(outDir = SFX_DIR) {
+export function ensureSfxBank(outDir = resolveSfxDir()) {
   ensureDir(outDir);
   const specs = [
     ['impact-deep.wav', () => genImpactDeep()],
@@ -240,7 +240,7 @@ const isCli =
 
 if (isCli) {
   const { flags } = parseArgs(process.argv.slice(2));
-  const outDir = flags.out ? path.resolve(String(flags.out)) : SFX_DIR;
+  const outDir = flags.out ? path.resolve(String(flags.out)) : resolveSfxDir();
   if (flags.force && fs.existsSync(outDir)) {
     for (const f of fs.readdirSync(outDir)) {
       if (f.endsWith('.wav')) fs.unlinkSync(path.join(outDir, f));

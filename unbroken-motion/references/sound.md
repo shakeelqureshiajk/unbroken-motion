@@ -52,4 +52,4 @@ Instead of slapping dry WAV samples onto a music bed, `sound.mjs` writes an `ffm
 ---
 
 ## 4. Attribution (`CREDITS.md`)
-Every time `sound.mjs` mixes audio for `cases/<film>`, it automatically updates `cases/<film>/CREDITS.md` listing whether procedural CC0 SFX/bed or user-supplied stems were used, preserving clear commercial auditability.
+Every time `sound.mjs` mixes audio for `<workspace>/<film>`, it automatically updates `<workspace>/<film>/CREDITS.md` listing whether procedural CC0 SFX/bed or user-supplied stems were used, preserving clear commercial auditability.

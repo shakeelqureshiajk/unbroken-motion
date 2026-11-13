@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   ensureDir,
+  ensureWorkingDirOutsideSkill,
   parseArgs,
   readJson,
   resolveFfmpegBinaries,
@@ -34,6 +35,7 @@ function extractFramePngBase64(ffmpeg, videoPath, frameIndex, fps, tempPngPath) 
 
 export async function generateStillsForFilm(filmArg, options = {}) {
   const filmDir = resolveFilmDir(filmArg);
+  ensureWorkingDirOutsideSkill(filmDir);
   const beats = readJson(path.join(filmDir, 'beats.json'));
   const manifest = readJson(path.join(filmDir, 'manifest.json'));
   const useVideoSeek = Boolean(options.fromVideo);

@@ -3,12 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  SFX_DIR,
   ensureDir,
   parseArgs,
   readJson,
   resolveFfmpegBinaries,
   resolveFilmDir,
+  resolveSfxDir,
   runBin,
 } from './common.mjs';
 import {
@@ -104,7 +104,8 @@ export async function mixSoundForFilm(filmArg, options = {}) {
     throw new Error('ffmpeg binary not found; cannot mux film audio.');
   }
 
-  ensureSfxBank(SFX_DIR);
+  const sfxDir = resolveSfxDir(filmDir);
+  ensureSfxBank(sfxDir);
 
   const lastBeat = beats.beats[beats.beats.length - 1];
   const totalDurSec = lastBeat ? lastBeat.start + lastBeat.duration : 6;
@@ -121,7 +122,7 @@ export async function mixSoundForFilm(filmArg, options = {}) {
     beats.audio?.musicPath && fs.existsSync(path.resolve(filmDir, beats.audio.musicPath))
       ? path.resolve(filmDir, beats.audio.musicPath)
       : null;
-  const bedSource = customMusic || (beats.audio?.useAmbientBed !== false ? path.join(SFX_DIR, 'ambient-bed.wav') : null);
+  const bedSource = customMusic || (beats.audio?.useAmbientBed !== false ? path.join(sfxDir, 'ambient-bed.wav') : null);
 
   if (bedSource && fs.existsSync(bedSource)) {
     const decodedBed = decodeAudioViaFfmpeg(ffmpeg, bedSource);
@@ -147,7 +148,7 @@ export async function mixSoundForFilm(filmArg, options = {}) {
   for (const ev of events) {
     const wavName = EVENT_TO_WAV[ev.type] || 'ui-click.wav';
     if (!wavCache.has(wavName)) {
-      wavCache.set(wavName, readStereoWav(path.join(SFX_DIR, wavName)));
+      wavCache.set(wavName, readStereoWav(path.join(sfxDir, wavName)));
     }
     const sample = wavCache.get(wavName);
     const startIdx = Math.max(0, Math.round(ev.atSec * SAMPLE_RATE));

@@ -13,6 +13,19 @@ Produce deterministic, single-camera motion films in Remotion where every beat
 physically grows out of the previous one (`carry`), verified quantitatively and
 visually before human review.
 
+## 0. Runtime Requirements & Support Tiers
+- **Tier 1 (Full Pipeline — Local Terminal):** Requires Node.js `>= 22.6.0`
+  (native TypeScript execution), a writable workspace directory, Chromium
+  available to Remotion, and network access once for `npm install`.
+- **Tier 2 (Author-Only Fallback — Hosted Sandbox / No Terminal):** If local
+  Node/Chromium rendering is unavailable, work in author-only mode: pitch
+  concepts, author `beats.json` and `src/scene.ts`, and give the user the exact
+  CLI commands to render and verify locally.
+- **Read-Only Skill Package:** Never write generated films, `manifest.json`,
+  `node_modules`, or audio caches inside `<skill-dir>`. All films live in
+  `<workspace>/<film-slug>` (defaults to `./unbroken-motion-films/<film-slug>`
+  or `UNBROKEN_MOTION_WORKSPACE`).
+
 ## 1. Mandatory Intake (Do Not Skip)
 Before writing any code or beat sheet, confirm:
 1. **Brand:** Locate `references/brands/<brand>.md`. If missing or unspecified,
@@ -22,6 +35,10 @@ Before writing any code or beat sheet, confirm:
 3. **UI Assets:** Screenshots or component specs to rebuild as vector actors.
 
 ## 2. Step-by-Step Runbook
+0. **Environment Check (`doctor`):**
+   - Locate `<skill-dir>` (the directory containing this `SKILL.md`).
+   - Run `node "<skill-dir>/scripts/doctor.mjs"` and fix any reported failures
+     (or switch to Tier-2 author-only mode if running in a hosted sandbox).
 1. **Load Context:** Read [principles.md](./references/principles.md),
    [carry-patterns.md](./references/carry-patterns.md), and the active brand file.
 2. **Pitch 3 Visual Concepts:** Present 3 one-sentence concepts focused on the
@@ -29,32 +46,35 @@ Before writing any code or beat sheet, confirm:
    into a command chip, pushing straight through into the live dashboard"*).
    Wait for the user's pick.
 3. **Scaffold & Plan (`beats.json`):**
-   - Run `node scripts/scaffold.mjs --name <film-slug> --brand <brand> --aspect <ratio>`
-   - Read [rhythm.md](./references/rhythm.md) and write `beats.json` with varied
-     beat lengths, centered `handoff` windows, and a fixed integer `seed`.
+   - Run `node "<skill-dir>/scripts/scaffold.mjs" --name <film-slug> --brand <brand> --aspect <ratio> --install`
+   - Read [rhythm.md](./references/rhythm.md) and write `beats.json` in
+     `<workspace>/<film-slug>/beats.json` with varied beat lengths, centered
+     `handoff` windows, and a fixed integer `seed`.
    - Validate schema immediately:
-     `node scripts/verify.mjs --film <film-slug> --schema-only`
+     `node "<skill-dir>/scripts/verify.mjs" --film <film-slug> --schema-only`
 4. **Rebuild UI & Compose:**
    - Follow [ui-rebuild.md](./references/ui-rebuild.md) to author pure-math
-     actor trajectories in `src/scene.ts` using `evaluateSceneWithCamera` and
-     `src/lib/ui-kit.tsx`.
+     actor trajectories in `<workspace>/<film-slug>/src/scene.ts` using
+     `evaluateSceneWithCamera` and `src/lib/ui-kit.tsx`.
    - Wire continuous camera presets (`follow`, `whip`, `pushThrough`, `float`,
      `shake`, `hold`) from [camera.md](./references/camera.md).
 5. **Draft, Verify & Visual Self-Check Loop:**
    - Generate manifest, draft MP4, contact sheets, audio, and gate check:
-     `node scripts/render.mjs --film <film-slug> --draft`
-   - Run full checker standalone if iterating without re-rendering:
-     `node scripts/manifest.mjs --film <film-slug> && node scripts/verify.mjs --film <film-slug>`
-   - **Mandatory Visual Self-Check:** Call `read_file` on
-     `cases/<film-slug>/stills/boundary-handoffs.png` and `beat-overview.png`.
+     `node "<skill-dir>/scripts/render.mjs" --film <film-slug> --draft`
+   - Run fast metric pre-flight standalone (`< 100ms`) when iterating:
+     `node "<skill-dir>/scripts/manifest.mjs" --film <film-slug> && node "<skill-dir>/scripts/verify.mjs" --film <film-slug>`
+   - **Mandatory Visual Self-Check:** Open and visually inspect the generated
+     image files at `<workspace>/<film-slug>/stills/boundary-handoffs.png` and
+     `<workspace>/<film-slug>/stills/beat-overview.png`.
    - Fix any failing gate or visual jump cut before proceeding.
 6. **Sound Design:**
    - Read [sound.md](./references/sound.md) and customize `audioEvents` in
-     `beats.json`; re-mix with `node scripts/sound.mjs --film <film-slug>`.
+     `beats.json`; re-mix with `node "<skill-dir>/scripts/sound.mjs" --film <film-slug>`.
 7. **Human Review & 4K60 Master:**
-   - Present `out/draft.mp4` and `stills/boundary-handoffs.png` to the user.
+   - Present `<workspace>/<film-slug>/out/draft.mp4` and
+     `<workspace>/<film-slug>/stills/boundary-handoffs.png` to the user.
    - Once approved, render the supersampled 4K60 master:
-     `node scripts/render.mjs --film <film-slug> --final --blur-samples 4`
+     `node "<skill-dir>/scripts/render.mjs" --film <film-slug> --final --blur-samples 4`
 
 ## 3. Hard Rules
 - **Zero Hard Cuts:** Every beat boundary must carry a visible `<Actor>` across

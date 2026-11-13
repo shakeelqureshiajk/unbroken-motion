@@ -1,155 +1,185 @@
-# Unbroken Motion
+﻿# Unbroken Motion (`v0.2.0`)
 
 **A deterministic, single-camera Remotion skill for producing unbroken product launch films, UI demos, kinetic typography teasers, and brand reels with zero hard cuts.**
 
-Every beat physically grows out of the previous one using continuous spatial handoffs (`carry`), single-camera trajectory solving, rebuilt vector UI actors, procedural CC0 audio, and automated visual + quantitative verification (`G1`–`G7`).
-
----
-
-## Showcase
-
-All films below were produced by this skill and passed every automated gate (`G1`–`G7`) before review.
-
-| Film | Format | Video | Beat overview |
-| --- | --- | --- | --- |
-| **Content Creation** — idea → script → record → edit → publish | `9:16` · 15.0s | [MP4](showcase/05-content-creation-9x16.mp4) | [PNG](showcase/05-content-creation-beat-overview.png) |
-| **Agentic AI Explained** — goal → plan → tool call → perceive/reason/act loop | `16:9` · 12.8s | [MP4](showcase/04-agentic-ai-16x9.mp4) | [PNG](showcase/04-agentic-ai-beat-overview.png) |
-| **Single Seed** — morph · tether · portal · collapse (4K60 master) | `16:9` · 12.6s | [MP4](showcase/01-single-seed-4k60.mp4) | [PNG](showcase/01-single-seed-beat-overview.png) |
-| **UI Workflow** — cursor click · detach · dashboard | `16:9` · 12.8s | [MP4](showcase/02-ui-workflow-16x9.mp4) | [PNG](showcase/02-ui-workflow-beat-overview.png) |
-| **Brand Reel (Vertical)** — warm editorial mobile reel | `9:16` · 12.4s | [MP4](showcase/03-brand-reel-9x16.mp4) | [PNG](showcase/03-brand-reel-vertical-beat-overview.png) |
-
-![Boundary handoff diagnostic — every beat boundary carries a live actor](showcase/04-agentic-ai-boundary-handoffs.png)
+Every beat physically grows out of the previous one using continuous spatial handoffs (`carry`), single-camera trajectory solving, rebuilt vector UI actors, procedural CC0 audio, and automated visual + quantitative verification (`G1`â€“`G7`).
 
 ---
 
 ## Core Philosophy
 
 1. **Zero Hard Cuts (`carryScore = 1.0`):** Every beat boundary shares an active, transforming `<Actor>` across a centered `handoff.windowSec` using one of five physical carry modes:
-   - `morph` — one form continuously reshapes into another (e.g., dot seed -> command bar).
-   - `tether` — an anchor element travels along a physical bridge while the camera pans.
-   - `detach` — a UI sub-element lifts out of a list or shell to become the next beat's hero.
-   - `portal` — the camera pushes through an expanding frame directly into the next view.
-   - `collapse` — an expanded layout folds back cleanly into a badge or signature mark.
+   - `morph` â€” one form continuously reshapes into another (e.g., dot seed -> command bar).
+   - `tether` â€” an anchor element travels along a physical bridge while the camera pans.
+   - `detach` â€” a UI sub-element lifts out of a list or shell to become the next beat's hero.
+   - `portal` â€” the camera pushes through an expanding frame directly into the next view.
+   - `collapse` â€” an expanded layout folds back cleanly into a badge or signature mark.
 2. **One Continuous Camera:** Camera presets (`follow`, `whip`, `pushThrough`, `float`, `shake`, `hold`) blend smoothly across boundaries using logarithmic zoom interpolation and seeded simplex drift.
-3. **3-Layer Vector UI Rebuilds:** Never pan or zoom static screenshots. Hero UI elements are rebuilt from resolution-independent components in [`src/lib/ui-kit.tsx`](unbroken-motion/templates/starter/src/lib/ui-kit.tsx) with a clean shell, semantic content, and a kinetic hero anchor.
-4. **Pure-Function Determinism:** Frame states depend strictly on `useContinuousFrame()` (`frame + shutterOffset`) and an explicit integer `seed`—never `Math.random()`, `Date.now()`, or raw `useCurrentFrame()`. Identical evaluation powers both React/Remotion rendering and Node telemetry generation.
-5. **Visual & Quantitative Gatekeeping:** No draft is shown and no `--final` 4K60 master renders unless all 7 automated gates (`G1`–`G7`) pass and annotated diagnostic contact sheets (`boundary-handoffs.png`, `beat-overview.png`) are inspected.
+3. **3-Layer Vector UI Rebuilds:** Never pan or zoom static screenshots. Hero UI elements are rebuilt from resolution-independent components in [`templates/starter/src/lib/ui-kit.tsx`](unbroken-motion/templates/starter/src/lib/ui-kit.tsx) with a clean shell, semantic content, and a kinetic hero anchor.
+4. **Pure-Function Determinism:** Frame states depend strictly on `useContinuousFrame()` (`frame + shutterOffset`) and an explicit integer `seed`â€”never `Math.random()`, `Date.now()`, or raw `useCurrentFrame()`. Identical evaluation powers both React/Remotion rendering and Node telemetry generation.
+5. **Read-Only Skill & Gatekeeping:** The installed skill directory is 100% read-only at runtime. All films, manifests, audio caches, and `node_modules` live in your workspace (`./unbroken-motion-films/<film-slug>` or `UNBROKEN_MOTION_WORKSPACE`). No draft is shown and no `--final` 4K60 master renders unless all 7 automated gates (`G1`â€“`G7`) pass and annotated diagnostic contact sheets (`boundary-handoffs.png`, `beat-overview.png`) are inspected.
 
 ---
 
-## Repository Structure
+## Support Tiers & Requirements
+
+| Tier | Environment | Capabilities |
+| --- | --- | --- |
+| **Tier 1 (Full Pipeline)** | Local terminal on Windows, macOS, or Linux (`x64` / `arm64`) â€” **Claude Code, Google Antigravity, OpenAI Codex CLI, Cursor, OpenCode, Amp** | Full automated pipeline: `doctor`, `scaffold`, `<100ms` `manifest` + `G1`â€“`G7` verification, 1080p30 draft renders (`~10â€“15s`), contact sheet generation, procedural CC0 audio mastering, and 4K60 4-pass supersampled master renders (`~2â€“4 min` for a 12s film). |
+| **Tier 2 (Author-Only Mode)** | Hosted web/desktop sandbox without local Chromium or network â€” **Claude Desktop, Claude.ai Web** | Concept pitching, authoring `beats.json` and `src/scene.ts`, and schema/continuity logic review; outputs exact CLI commands for the user to render locally. |
+
+### Runtime Prerequisites (Tier 1)
+- **Node.js `>= 22.6.0`** (LTS `22.18+` or `24+` recommended; uses native TypeScript type-stripping so `manifest.mjs` evaluates `src/scene.ts` in `< 100ms` with zero build step).
+- **Network access (first workspace setup only):** Required once when running `npm install` in the film workspace (`./unbroken-motion-films`) to install Remotion, Chromium Headless Shell, and bundled FFmpeg.
+
+---
+
+## Skill Package Structure
 
 ```text
-unbroken-motion-github/
-├── README.md                     # This file
-├── LICENSE                       # MIT
-├── unbroken-motion.zip           # Ready-to-import skill archive (Claude Desktop / Claude.ai)
-├── showcase/                     # Rendered example films + diagnostic contact sheets
-└── unbroken-motion/              # The skill itself (drop into your skills folder)
-    ├── SKILL.md                  # Core agent instructions & hard rules
-    ├── README.md · DECISIONS.md · CHANGELOG.md
-    ├── references/               # principles, rhythm, camera, carry patterns, UI rebuild, sound, rejected cuts
-    │   └── brands/               # _template, obsidian-tech, warm-editorial, agentic-ai, content-studio
-    ├── schema/                   # beats.schema.json, brand.schema.json
-    ├── scripts/                  # scaffold, manifest, verify, stills, synth-sfx, dsp, sound, render, test-suite
-    ├── templates/starter/        # Remotion starter project & shared motion runtime
-    └── cases/                    # Benchmark films & calibration fixtures (sources only)
+unbroken-motion/
+â”œâ”€â”€ SKILL.md                            # Core agent instructions & hard rules (agent-neutral)
+â”œâ”€â”€ README.md                           # Documentation & cross-agent install guide
+â”œâ”€â”€ DECISIONS.md                        # Architectural ADRs & licensing log
+â”œâ”€â”€ CHANGELOG.md                        # Version history & hardened rules log
+â”œâ”€â”€ LICENSE                             # MIT License
+â”œâ”€â”€ agents.config.json                  # Target paths for Claude, Antigravity, Codex, Cursor, OpenCode, Amp
+â”œâ”€â”€ references/
+â”‚   â”œâ”€â”€ principles.md                   # Core motion & continuity manifesto
+â”‚   â”œâ”€â”€ rhythm.md                       # Asymmetric timing & rest-ratio rules
+â”‚   â”œâ”€â”€ camera.md                       # Continuous camera presets & curves
+â”‚   â”œâ”€â”€ carry-patterns.md               # Morph, tether, detach, portal, collapse specs
+â”‚   â”œâ”€â”€ ui-rebuild.md                   # 3-layer vector UI architecture
+â”‚   â”œâ”€â”€ sound.md                        # SFX synthesis, reverb, ducking, -14 LUFS mastering
+â”‚   â”œâ”€â”€ rejected-cuts.md                # Logged failures promoted to G1-G7 & SKILL.md rules
+â”‚   â””â”€â”€ brands/
+â”‚       â”œâ”€â”€ _template.md                # Starter template for new brands
+â”‚       â”œâ”€â”€ obsidian-tech.md            # Dark slate/cyan/indigo tech brand ("VECTRA")
+â”‚       â”œâ”€â”€ warm-editorial.md           # Sunlit linen/terracotta editorial brand ("ATELIER")
+â”‚       â”œâ”€â”€ agentic-ai.md               # Dark cyan/teal AI explainer brand ("AGENTIC AI")
+â”‚       â””â”€â”€ content-studio.md           # Warm editorial creator brand ("CREATOR")
+â”œâ”€â”€ schema/
+â”‚   â”œâ”€â”€ beats.schema.json               # JSON Schema Draft 2020-12 for beat sheets
+â”‚   â””â”€â”€ brand.schema.json               # JSON Schema Draft 2020-12 for brand tokens
+â”œâ”€â”€ scripts/
+â”‚   â”œâ”€â”€ common.mjs                      # Workspace/SFX resolvers, brand loader, schema validator, FFmpeg lookup
+â”‚   â”œâ”€â”€ doctor.mjs                      # Environment & Tier 1/Tier 2 readiness checker
+â”‚   â”œâ”€â”€ install.mjs                     # Multi-agent copy installer (never symlinks)
+â”‚   â”œâ”€â”€ package-skill.mjs               # Builds clean POSIX-path unbroken-motion.zip
+â”‚   â”œâ”€â”€ scaffold.mjs                    # Scaffolds new films in <workspace>/<film-slug>
+â”‚   â”œâ”€â”€ manifest.mjs                    # Evaluates per-frame screenBoxes & velocities (manifest.json)
+â”‚   â”œâ”€â”€ verify.mjs                      # Automated G1-G7 gate checker
+â”‚   â”œâ”€â”€ stills.mjs                      # Exact-frame Remotion DiagnosticSheet contact sheets
+â”‚   â”œâ”€â”€ synth-sfx.mjs                   # Procedural 48kHz CC0 WAV SFX generator
+â”‚   â”œâ”€â”€ dsp.mjs                         # Pure-Node reverb, sidechain ducking, LUFS & True Peak DSP
+â”‚   â”œâ”€â”€ sound.mjs                       # Audio stem mixing, -1.85 dB mastering, & MP4 AAC muxing
+â”‚   â”œâ”€â”€ render.mjs                      # Draft (1080p30), Gallery, & 4K60 4-pass supersampled final
+â”‚   â””â”€â”€ test-suite.mjs                  # End-to-end negative, brand-switch, calibration, & read-only tests
+â”œâ”€â”€ templates/starter/                  # Single source of truth for Remotion runtime (lib/, stage/, compositions/)
+â””â”€â”€ examples/                           # Slim benchmark & calibration films (beats.json + src/scene.ts + src/brand.json)
 ```
-
-> Rendered outputs (`out/`, `audio/`, `stills/`) and `node_modules/` are not committed. Run `npm install` inside a case (or `templates/starter`) before rendering.
 
 ---
 
-## Installation & Import
+## Installation Across Agents
 
-### Prerequisites
-- **Node.js 22+ / 24+** (uses native TypeScript type-stripping for fast `manifest.mjs` evaluation without extra build steps).
-- **Internet access (first install only):** Required once when running `npm install` in `templates/starter` to download Remotion, Chromium Headless Shell, and bundled FFmpeg.
+### Automatic Multi-Agent Installer (Recommended)
+Run `install.mjs` to auto-detect installed agents on your machine and copy (never symlink) the skill into their skill directories:
 
-### 1. Google Antigravity
-- **Workspace-local:** Copy the `unbroken-motion/` folder to `<your-project>/.agents/skills/unbroken-motion/`.
-- **Global install (available in all projects):** Copy the `unbroken-motion/` folder to `C:\Users\<user>\.gemini\antigravity\skills\unbroken-motion` (or `~/.gemini/antigravity/skills/unbroken-motion` on macOS/Linux).
+```bash
+# Auto-detect installed agents (user-level global install)
+node scripts/install.mjs
 
-### 2. Claude Code (CLI / IDE Extension)
-- **Global install:**
-  ```powershell
-  Copy-Item -Recurse -Force ".\unbroken-motion" "$HOME\.claude\skills\unbroken-motion"
-  ```
-- **Per-project install:** Copy the folder into `<your-project>\.claude\skills\unbroken-motion\`.
+# Install or update for a specific agent (claude | antigravity | codex | cursor | opencode | amp | all)
+node scripts/install.mjs --agent all --scope user --update
 
-### 3. Claude Desktop / Claude.ai Web (`.zip`)
-1. Open **Settings -> Capabilities -> Skills** and upload [`unbroken-motion.zip`](unbroken-motion.zip) (`~325 KB`, excludes `node_modules` and rendered binary artifacts).
-2. Whenever extracting `.zip` into a fresh local environment to render `.mp4` videos, run once:
+# Install into a specific project workspace
+node scripts/install.mjs --agent claude,antigravity,codex --scope project --project-dir /path/to/project
+```
+
+### Manual Installation by Agent
+
+1. **Claude Code:**
+   - **Global:** Copy `unbroken-motion/` to `~/.claude/skills/unbroken-motion` (`$HOME\.claude\skills\unbroken-motion` on Windows).
+   - **Project:** Copy to `<project>/.claude/skills/unbroken-motion`.
+2. **Google Antigravity:**
+   - **Global:** Copy `unbroken-motion/` to `~/.gemini/antigravity/skills/unbroken-motion`.
+   - **Project:** Copy to `<project>/.agents/skills/unbroken-motion`.
+3. **OpenAI Codex CLI:**
+   - **Global:** Copy `unbroken-motion/` to `~/.codex/skills/unbroken-motion`.
+   - **Project:** Copy to `<project>/.codex/skills/unbroken-motion`.
+4. **Cursor / OpenCode / Amp:**
+   - Copy `unbroken-motion/` to `<project>/.cursor/skills/unbroken-motion`, `~/.config/opencode/skills/unbroken-motion`, or `~/.amp/skills/unbroken-motion`.
+5. **Claude Desktop / Claude.ai Web (`.zip`):**
+   - Build or download `unbroken-motion.zip` (`node scripts/package-skill.mjs`) and upload it via **Settings -> Capabilities -> Skills**.
+
+### Verify Installation
+1. Restart your agent session so it reloads discovered skills.
+2. Ask the agent: *"What skills do you have available?"* and confirm `unbroken-motion` appears.
+3. Run the environment check:
    ```bash
-   cd unbroken-motion/templates/starter
-   npm install
+   node <skill-dir>/scripts/doctor.mjs
    ```
 
 ---
 
 ## Quickstart & CLI Workflow
 
-All commands run from `unbroken-motion/`:
+All generated films are stored outside the skill folder in `./unbroken-motion-films/<film-slug>` (or the directory set in `UNBROKEN_MOTION_WORKSPACE`).
 
-### 1. Scaffold a New Film
+### 0. Check Environment Readiness
 ```bash
-node scripts/scaffold.mjs --name product-launch --brand obsidian-tech --aspect 16:9
+node scripts/doctor.mjs
 ```
-Supported aspect ratios: `16:9` (`1920x1080` draft / `3840x2160` final), `9:16` (`1080x1920` / `2160x3840`), `1:1` (`1080x1080` / `2160x2160`).
+
+### 1. Scaffold a New Film in Your Workspace
+```bash
+node scripts/scaffold.mjs --name product-launch --brand obsidian-tech --aspect 16:9 --install
+```
+- Supported aspect ratios: `16:9` (`1920x1080` draft / `3840x2160` final), `9:16` (`1080x1920` / `2160x3840`), `1:1` (`1080x1080` / `2160x2160`).
+- You can also scaffold starting from any bundled example with `--from-example 01-single-seed`.
+- Passing `--install` runs `npm install` once at the workspace root (`./unbroken-motion-films/node_modules`), so all films in that workspace share dependencies automatically via standard Node.js parent-directory lookup without symlinks.
 
 ### 2. Author `beats.json` & Pure Scene Motion (`src/scene.ts`)
-Edit `cases/product-launch/beats.json` and export `evaluateFilmFrame(beats, brand, continuousFrame)` in `cases/product-launch/src/scene.ts` using `evaluateSceneWithCamera` and helpers from `src/lib/`.
-
-Validate schema and topology immediately:
+Edit `./unbroken-motion-films/product-launch/beats.json` and `./unbroken-motion-films/product-launch/src/scene.ts`. Validate schema and topology immediately:
 ```bash
 node scripts/verify.mjs --film product-launch --schema-only
 ```
 
-### 3. Fast Metric Pre-Flight (`< 100ms`, No Chrome Render)
-Generate frame telemetry and verify `G1`–`G5` + `G7` before rendering pixels:
+### 3. Fast Metric Pre-Flight (`< 100ms`, No Browser Needed)
+Generate frame telemetry and verify `G1`â€“`G5` + `G7` before rendering pixels:
 ```bash
 node scripts/manifest.mjs --film product-launch && node scripts/verify.mjs --film product-launch
 ```
 
-### 4. Draft Render, Audio Mix, & Diagnostic Stills
+### 4. Draft Render, Audio Mix, & Diagnostic Stills (`~10â€“15s`)
 ```bash
 node scripts/render.mjs --film product-launch --draft
 ```
-This runs the full draft pipeline:
-1. Generates `manifest.json`
-2. Renders `out/draft.mp4` (`30fps` + directional draft CSS blur)
-3. Captures bit-exact boundary & overview frames (`stills/boundary-handoffs.png`, `stills/beat-overview.png`)
-4. Synthesizes SFX if missing (`synth-sfx.mjs`), mixes room reverb + ducked bed + `-1.85 dB` PCM mastering (`256k` AAC), and muxes `audio/master.wav` into `out/draft.mp4`
-5. Executes `verify.mjs --require-audio`
+Produces:
+- `out/draft.mp4` (`30fps` + directional velocity blur + mastered `-14 LUFS` AAC audio)
+- `stills/boundary-handoffs.png` & `stills/beat-overview.png` (exact-frame Remotion diagnostic contact sheets)
+- Full `G1`â€“`G7` verification report
 
-### 5. Standalone Audio, Stills, & Component Gallery
-```bash
-node scripts/synth-sfx.mjs                                       # Regenerate CC0 SFX bank
-node scripts/sound.mjs --film product-launch                     # Re-mix audio & mux MP4
-node scripts/stills.mjs --film product-launch                    # Re-render DiagnosticSheets
-node scripts/render.mjs --film product-launch --draft --gallery  # Render out/gallery.mp4 UI showcase
-```
-
-### 6. 4K60 Temporal Supersampled Master
-Refuses to run unless all gates pass (override only with `--force`):
+### 5. 4K60 Temporal Supersampled Master (`~2â€“4 min`)
+Refuses to run unless all gates pass:
 ```bash
 node scripts/render.mjs --film product-launch --final --blur-samples 4
 ```
-Renders 4 shutter-offset sub-passes (`[-0.1875, -0.0625, +0.0625, +0.1875]` across a 180-degree shutter) at 4K `60fps` and blends them cleanly in fixed-point raw pixel space into `out/final-4k60.mp4` with verified AAC audio.
 
-### 7. Full Automated Regression Suite
+### 6. Full Automated Regression Suite
 ```bash
 node scripts/test-suite.mjs
 ```
 
 ---
 
-## Verification Gates (`G1`–`G7`)
+## Verification Gates (`G1`â€“`G7`)
 
 | Gate | Name | Pass Criteria |
 | --- | --- | --- |
 | **G1** | Schema & Carry Topology | Valid `beats.schema.json` + `brand.schema.json`, contiguous `start + duration` timeline, valid carry graph, `windowSec <= 0.5 * min(b0.duration, b1.duration)` |
-| **G2** | Boundary Continuity | Across `[fb-4 .. fb+4]`: `opacity >= 0.35`, velocity-compensated `IoU >= 0.55`, per-frame `areaRatio <= 1.25`, centroid jump `<= max(36, 1.35 * localVel1080)`, active motion cheat check (`Δpos > 24px` or `Δscale > 15%`), `carryScore = 1.0` |
+| **G2** | Boundary Continuity | Across `[fb-4 .. fb+4]`: `opacity >= 0.35`, velocity-compensated `IoU >= 0.55`, per-frame `areaRatio <= 1.25`, centroid jump `<= max(36, 1.35 * localVel1080)`, active motion cheat check (`Î”pos > 24px` or `Î”scale > 15%`), `carryScore = 1.0` |
 | **G3** | Rhythm & Pacing | Beat duration range `max/min >= 2.8`, duration CV `>= 0.28`, rest frames (`speed < 1.5 px/f`) in `[15%, 45%]`, and `>= 8` settle frames `< 3.0 px/f` within `15` frames after any `> 28 px/f` burst |
 | **G4** | Framing & Safe Zone | Resting hero actors (`speedNorm < 14`) stay within the `90%` viewport safe zone (`portal` exempted after `areaRatio > 0.65`) |
 | **G5** | Velocity Motion Blur | Any camera or visible actor with `speedNorm > 20` has active velocity blur (`blurEnabled && blurStrength > 0`) |
@@ -158,41 +188,22 @@ node scripts/test-suite.mjs
 
 ---
 
-## Multi-Brand System
+## Bundled Slim Examples (`examples/`)
 
-Brands live in `references/brands/<brand-id>.md` with YAML-fenced JSON frontmatter validated against `brand.schema.json`. Built-in themes:
-- **`obsidian-tech` (`VECTRA`):** Dark slate canvas (`#070B12`), electric cyan primary (`#38BDF8`), indigo secondary (`#6366F1`), snappy personality.
-- **`warm-editorial` (`ATELIER`):** Sunlit linen ivory (`#FBF7F0`), terracotta primary (`#D96B43`), forest emerald secondary (`#1F5C4D`), Georgia serif headings, calm `soft` curves.
-- **`agentic-ai` (`AGENTIC AI`):** Derived from the `obsidian-tech` palette for the Agentic AI explainer.
-- **`content-studio` (`CREATOR`):** Derived from the `warm-editorial` palette for the Content Creation reel.
-
-To add a brand, copy `references/brands/_template.md`, define `colors`, `typography`, `geometry`, `logo`, `motionPersonality`, and `forbiddenColors`, then reference its `id` in `beats.json`. `render.mjs` and `scaffold.mjs` automatically sync `src/brand.json`.
-
----
-
-## Benchmark & Calibration Suite
-
-- `_calibration-bad-slideshow` — Intentional hard-cut / flat-rhythm test fixture; verifies `G2` (`carryScore = 0`) and `G3` fail cleanly.
-- `_calibration-good-carry` — Reference single-carry continuity fixture; verifies `carryScore = 1.0`.
-- `smoke-test` — Starter seed (`morph` + `collapse`) + `Gallery` showcase.
-- `01-single-seed` — `obsidian-tech`, `16:9`, `12.60s`: full arc spanning `morph`, `tether`+`whip`, `portal`+`pushThrough`, and `collapse` (includes verified 4K60 master).
-- `02-ui-workflow` — `obsidian-tech`, `16:9`, `12.80s`: Layer-1 `appWindow` + vector `cursor` click + `menuRow` `detach` into `chip` inside `commandBar` -> `tether` -> `portal` into 3-card telemetry dashboard -> `collapse`.
-- `03-brand-reel-vertical` — `warm-editorial`, `9:16` (`1080x1920`), `12.40s`: vertical mobile launch reel using vertical `tether` into `phoneFrame`, stacked editorial cards, and `ATELIER` resolve.
-- `04-agentic-ai` — `agentic-ai`, `16:9`, `12.80s`: Agentic AI explainer (goal detach → plan → tool-call tether → perceive/reason/act dashboard → collapse).
-- `05-content-creation` — `content-studio`, `9:16`, `15.00s`: Content Creation reel (idea seed → script bar → record phone → shoot/edit/publish cards → `CREATOR` resolve), uniformly time-scaled from `03`.
+- `_calibration-bad-slideshow` â€” Intentional hard-cut / flat-rhythm fixture; verifies `G2` (`carryScore = 0`) and `G3` fail cleanly.
+- `_calibration-good-carry` â€” Reference single-carry continuity fixture; verifies `carryScore = 1.0`.
+- `smoke-test` â€” Starter seed (`morph` + `collapse`) + `Gallery` showcase.
+- `01-single-seed` â€” `obsidian-tech`, `16:9`, `12.60s`: full arc spanning `morph`, `tether`+`whip`, `portal`+`pushThrough`, and `collapse`.
+- `02-ui-workflow` â€” `obsidian-tech`, `16:9`, `12.80s`: Layer-1 `appWindow` + vector `cursor` click + `menuRow` `detach` into `chip` inside `commandBar` -> `tether` -> `portal` into 3-card telemetry dashboard -> `collapse`.
+- `03-brand-reel-vertical` â€” `warm-editorial`, `9:16` (`1080x1920`), `12.40s`: vertical mobile launch reel using vertical `tether` into `phoneFrame`, stacked editorial cards, and `ATELIER` resolve.
+- `04-agentic-ai` â€” `agentic-ai`, `16:9`, `12.80s`: Agentic AI explainer (goal detach -> plan -> tool-call tether -> perceive/reason/act dashboard -> collapse).
+- `05-content-creation` â€” `content-studio`, `9:16`, `15.00s`: Content Creation reel (idea seed -> script bar -> recording phone -> shoot/edit/publish cards -> `CREATOR` resolve).
 
 ---
 
-## Combining with Other Skills
+## Licensing
 
-`unbroken-motion` is designed to compose cleanly with upstream and parallel skills:
-- **Design / Figma Skills:** Extract brand palettes, typography, and component structure into a `references/brands/<brand>.md` token file, then render vector motion without raster assets.
-- **Browser Inspection Skills:** Inspect a live web app or localhost prototype to capture layout hierarchy and copy, then rebuild hero screens natively via `ui-kit.tsx`.
-- **Copywriting / Marketing Skills:** Author beat timing, hook text, and feature callouts fed directly into `beats.json`.
-- **Swarm / Parallel Agent Workflows:** Render `16:9`, `9:16`, and `1:1` campaign variants concurrently across isolated `cases/<slug>` directories and gate all of them with `verify.mjs`.
+- **Skill Package (`unbroken-motion`):** Released under the [MIT License](LICENSE).
+- **Procedural Audio (`synth-sfx.mjs`):** Synthesized mathematically at 48 kHz (CC0 / public domain equivalent).
+- **Remotion Runtime:** Remotion v4 is governed by the [Remotion License](https://www.remotion.dev/license) (free for individuals, non-profits, and companies with $\le 3$ people; commercial license required for larger organizations).
 
----
-
-## License
-
-Released under the [MIT License](LICENSE). Procedural sound effects are generated in code (CC0).

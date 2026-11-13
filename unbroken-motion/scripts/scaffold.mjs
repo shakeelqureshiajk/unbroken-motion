@@ -1,57 +1,78 @@
 #!/usr/bin/env node
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  CASES_DIR,
   STARTER_TEMPLATE_DIR,
-  ensureDir,
+  copyStarterTemplate,
+  isPathInside,
+  materializeExampleToDir,
   parseArgs,
   readJson,
   resolutionForAspect,
+  resolveWorkspaceDir,
+  SKILL_ROOT,
   syncFilmBrandJson,
   writeJson,
 } from './common.mjs';
 
-function copyTemplateRecursive(srcDir, destDir) {
-  ensureDir(destDir);
-  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (
-      entry.name === 'node_modules' ||
-      entry.name === 'out' ||
-      entry.name === '.remotion' ||
-      entry.name === 'stills'
-    ) {
-      continue;
-    }
-    const srcPath = path.join(srcDir, entry.name);
-    const destPath = path.join(destDir, entry.name);
-    if (entry.isDirectory()) {
-      copyTemplateRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
+function hasParentNodeModules(dir) {
+  let curr = path.resolve(dir);
+  for (let i = 0; i < 4; i++) {
+    if (fs.existsSync(path.join(curr, 'node_modules', 'remotion'))) return true;
+    const parent = path.dirname(curr);
+    if (parent === curr) break;
+    curr = parent;
   }
+  return false;
 }
 
 function main() {
   const { flags } = parseArgs(process.argv.slice(2));
   const name = flags.name;
   if (!name || typeof name !== 'string') {
-    console.error('Usage: node scripts/scaffold.mjs --name <film-slug> [--out <dir>] [--brand <brand-id>] [--aspect 16:9|9:16|1:1] [--force]');
+    console.error(
+      'Usage: node scripts/scaffold.mjs --name <film-slug> [--out <dir>] [--workspace <dir>] [--brand <brand-id>] [--aspect 16:9|9:16|1:1] [--from-example <slug>] [--install] [--force]'
+    );
     process.exit(1);
   }
 
+  const workspaceDir = resolveWorkspaceDir(
+    typeof flags.workspace === 'string' ? flags.workspace : null
+  );
   const targetDir = flags.out
     ? path.resolve(String(flags.out))
-    : path.join(CASES_DIR, name);
+    : path.join(workspaceDir, name);
+
+  if (isPathInside(targetDir, SKILL_ROOT)) {
+    console.error(`Refusing to scaffold inside skill folder (${targetDir}). Use a workspace path outside ${SKILL_ROOT}.`);
+    process.exit(1);
+  }
 
   if (fs.existsSync(targetDir) && !flags.force) {
     console.error(`Target directory already exists: ${targetDir} (pass --force to overwrite)`);
     process.exit(1);
   }
 
-  copyTemplateRecursive(STARTER_TEMPLATE_DIR, targetDir);
+  // Ensure workspace root has package.json so a single `npm install` at the workspace root serves all films
+  const parentDir = path.dirname(targetDir);
+  if (!fs.existsSync(path.join(parentDir, 'package.json'))) {
+    fs.mkdirSync(parentDir, { recursive: true });
+    fs.copyFileSync(
+      path.join(STARTER_TEMPLATE_DIR, 'package.json'),
+      path.join(parentDir, 'package.json')
+    );
+    const lockSrc = path.join(STARTER_TEMPLATE_DIR, 'package-lock.json');
+    if (fs.existsSync(lockSrc)) {
+      fs.copyFileSync(lockSrc, path.join(parentDir, 'package-lock.json'));
+    }
+  }
+
+  if (flags['from-example']) {
+    materializeExampleToDir(String(flags['from-example']), targetDir);
+  } else {
+    copyStarterTemplate(targetDir);
+  }
 
   const beatsPath = path.join(targetDir, 'beats.json');
   const beats = readJson(beatsPath);
@@ -76,20 +97,20 @@ function main() {
   pkg.name = `unbroken-motion-${name.replace(/[^a-z0-9-_]/gi, '-').toLowerCase()}`;
   writeJson(pkgPath, pkg);
 
-  // Link node_modules via directory junction on Windows / symlink on POSIX if available
-  const starterModules = path.join(STARTER_TEMPLATE_DIR, 'node_modules');
-  const filmModules = path.join(targetDir, 'node_modules');
-  if (!flags['no-link-deps'] && fs.existsSync(starterModules) && !fs.existsSync(filmModules)) {
-    fs.symlinkSync(
-      starterModules,
-      filmModules,
-      process.platform === 'win32' ? 'junction' : 'dir'
-    );
+  if (flags.install && !hasParentNodeModules(targetDir)) {
+    console.log(`Installing Remotion dependencies in ${parentDir}...`);
+    execSync('npm install', { cwd: parentDir, stdio: 'inherit' });
   }
 
   console.log(`Scaffolded film "${name}" at: ${targetDir}`);
-  console.log(`Brand synced: ${beats.brand} | Aspect: ${beats.aspectRatio} (${beats.resolution.width}x${beats.resolution.height})`);
+  console.log(
+    `Brand synced: ${beats.brand} | Aspect: ${beats.aspectRatio} (${beats.resolution.width}x${beats.resolution.height})`
+  );
+  if (!hasParentNodeModules(targetDir)) {
+    console.log(
+      `Note: Run "npm install" inside "${parentDir}" (or "${targetDir}") before rendering video.`
+    );
+  }
 }
 
 main();
-

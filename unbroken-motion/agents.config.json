@@ -1,0 +1,53 @@
+{
+  "skillName": "unbroken-motion",
+  "agents": [
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "projectDir": ".claude/skills/unbroken-motion",
+      "userDir": "~/.claude/skills/unbroken-motion",
+      "detectDirs": ["~/.claude", ".claude"],
+      "detectBins": ["claude"]
+    },
+    {
+      "id": "antigravity",
+      "name": "Google Antigravity",
+      "projectDir": ".agents/skills/unbroken-motion",
+      "userDir": "~/.gemini/antigravity/skills/unbroken-motion",
+      "detectDirs": ["~/.gemini/antigravity", ".agents", ".agent"],
+      "detectBins": ["agy"]
+    },
+    {
+      "id": "codex",
+      "name": "OpenAI Codex",
+      "projectDir": ".codex/skills/unbroken-motion",
+      "userDir": "~/.codex/skills/unbroken-motion",
+      "detectDirs": ["~/.codex", ".codex"],
+      "detectBins": ["codex"]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "projectDir": ".cursor/skills/unbroken-motion",
+      "userDir": "~/.cursor/skills/unbroken-motion",
+      "detectDirs": ["~/.cursor", ".cursor"],
+      "detectBins": ["cursor"]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "projectDir": ".opencode/skills/unbroken-motion",
+      "userDir": "~/.config/opencode/skills/unbroken-motion",
+      "detectDirs": ["~/.config/opencode", ".opencode"],
+      "detectBins": ["opencode"]
+    },
+    {
+      "id": "amp",
+      "name": "Amp",
+      "projectDir": ".amp/skills/unbroken-motion",
+      "userDir": "~/.amp/skills/unbroken-motion",
+      "detectDirs": ["~/.amp", ".amp"],
+      "detectBins": ["amp"]
+    }
+  ]
+}

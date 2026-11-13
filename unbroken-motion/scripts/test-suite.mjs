@@ -4,25 +4,33 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {
-  CASES_DIR,
+  EXAMPLES_DIR,
+  SKILL_ROOT,
   STARTER_TEMPLATE_DIR,
-  ensureDir,
+  copyStarterTemplate,
+  materializeExampleToDir,
   readJson,
+  resolveWorkspaceDir,
   syncFilmBrandJson,
   writeJson,
 } from './common.mjs';
 import { generateManifestForFilm } from './manifest.mjs';
 import { runVerification } from './verify.mjs';
 
-function copyDir(src, dst) {
-  ensureDir(dst);
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    if (entry.name === 'node_modules' || entry.name === 'out' || entry.name === 'stills') continue;
-    const s = path.join(src, entry.name);
-    const d = path.join(dst, entry.name);
-    if (entry.isDirectory()) copyDir(s, d);
-    else fs.copyFileSync(s, d);
+function snapshotSkillTree(dir) {
+  const entries = [];
+  function walk(curr) {
+    for (const e of fs.readdirSync(curr, { withFileTypes: true })) {
+      const full = path.join(curr, e.name);
+      if (e.isDirectory()) walk(full);
+      else {
+        const st = fs.statSync(full);
+        entries.push(`${path.relative(SKILL_ROOT, full)}:${st.size}:${Math.round(st.mtimeMs)}`);
+      }
+    }
   }
+  walk(dir);
+  return entries.sort().join('\n');
 }
 
 async function testMalformedBeatSheets(tmpRoot) {
@@ -59,7 +67,7 @@ async function testMalformedBeatSheets(tmpRoot) {
 
   for (const tc of cases) {
     const dir = path.join(tmpRoot, tc.name);
-    copyDir(STARTER_TEMPLATE_DIR, dir);
+    copyStarterTemplate(dir);
     const mutated = structuredClone(baseBeats);
     tc.mutate(mutated);
     writeJson(path.join(dir, 'beats.json'), mutated);
@@ -75,9 +83,8 @@ async function testMalformedBeatSheets(tmpRoot) {
 async function testGate7Violations(tmpRoot) {
   console.log('2. Testing Gate G7 brand isolation & determinism catches...');
   const dir = path.join(tmpRoot, 'g7-leak');
-  copyDir(STARTER_TEMPLATE_DIR, dir);
+  copyStarterTemplate(dir);
 
-  // Inject forbidden hex color + Math.random + raw useCurrentFrame into src/scene.ts
   const scenePath = path.join(dir, 'src', 'scene.ts');
   const orig = fs.readFileSync(scenePath, 'utf8');
   const tainted = orig.replace(
@@ -101,7 +108,7 @@ async function testGate7Violations(tmpRoot) {
 async function testBrandSwitching(tmpRoot) {
   console.log('3. Testing dynamic brand token switching (obsidian-tech -> warm-editorial)...');
   const dir = path.join(tmpRoot, 'brand-switch');
-  copyDir(STARTER_TEMPLATE_DIR, dir);
+  copyStarterTemplate(dir);
 
   const beatsPath = path.join(dir, 'beats.json');
   const beats = readJson(beatsPath);
@@ -120,46 +127,53 @@ async function testBrandSwitching(tmpRoot) {
   console.log('   [OK] Switched brand cleanly to warm-editorial (#FBF7F0) and passed G1-G5, G7');
 }
 
-async function testCalibrationCases() {
-  console.log('4. Testing calibration suite (_calibration-bad-slideshow vs _calibration-good-carry)...');
-  const badDir = path.join(CASES_DIR, '_calibration-bad-slideshow');
-  const goodDir = path.join(CASES_DIR, '_calibration-good-carry');
+async function testCalibrationCases(tmpRoot) {
+  console.log('4. Testing slim calibration examples (_calibration-bad-slideshow vs _calibration-good-carry)...');
+  const badDir = materializeExampleToDir('_calibration-bad-slideshow', path.join(tmpRoot, '_calibration-bad-slideshow'));
+  const goodDir = materializeExampleToDir('_calibration-good-carry', path.join(tmpRoot, '_calibration-good-carry'));
 
-  if (fs.existsSync(badDir)) {
-    await generateManifestForFilm(badDir);
-    const badRes = await runVerification(badDir, { requireAudio: false });
-    assert.equal(badRes.passed, false, '_calibration-bad-slideshow MUST fail verification');
-    const g2 = badRes.gates.find((g) => g.gate === 'G2');
-    const g3 = badRes.gates.find((g) => g.gate === 'G3');
-    assert.equal(g2.passed, false, '_calibration-bad-slideshow MUST fail G2 continuity');
-    assert.equal(g3.passed, false, '_calibration-bad-slideshow MUST fail G3 rhythm');
-    console.log(`   [OK] _calibration-bad-slideshow FAILED as expected (carryScore=${g2.carryScore}, ${g3.summary})`);
-  } else {
-    console.log('   [SKIP] _calibration-bad-slideshow not created yet');
-  }
+  await generateManifestForFilm(badDir);
+  const badRes = await runVerification(badDir, { requireAudio: false });
+  assert.equal(badRes.passed, false, '_calibration-bad-slideshow MUST fail verification');
+  const g2 = badRes.gates.find((g) => g.gate === 'G2');
+  const g3 = badRes.gates.find((g) => g.gate === 'G3');
+  assert.equal(g2.passed, false, '_calibration-bad-slideshow MUST fail G2 continuity');
+  assert.equal(g3.passed, false, '_calibration-good-carry MUST fail G3 rhythm');
+  console.log(`   [OK] _calibration-bad-slideshow FAILED as expected (carryScore=${g2.carryScore}, ${g3.summary})`);
 
-  if (fs.existsSync(goodDir)) {
-    await generateManifestForFilm(goodDir);
-    const goodRes = await runVerification(goodDir, { requireAudio: false });
-    assert.equal(goodRes.passed, true, `_calibration-good-carry MUST pass verification: ${JSON.stringify(goodRes.gates, null, 2)}`);
-    assert.equal(goodRes.carryScore, 1, '_calibration-good-carry carryScore must be 1.0');
-    console.log(`   [OK] _calibration-good-carry PASSED (carryScore=${goodRes.carryScore})`);
-  } else {
-    console.log('   [SKIP] _calibration-good-carry not created yet');
-  }
+  await generateManifestForFilm(goodDir);
+  const goodRes = await runVerification(goodDir, { requireAudio: false });
+  assert.equal(goodRes.passed, true, `_calibration-good-carry MUST pass verification: ${JSON.stringify(goodRes.gates, null, 2)}`);
+  assert.equal(goodRes.carryScore, 1, '_calibration-good-carry carryScore must be 1.0');
+  console.log(`   [OK] _calibration-good-carry PASSED (carryScore=${goodRes.carryScore})`);
 }
 
-async function testBenchmarkFilms() {
-  console.log('5. Verifying all benchmark & smoke-test films (G1-G7)...');
-  const films = ['smoke-test', '01-single-seed', '02-ui-workflow', '03-brand-reel-vertical'];
+async function testBenchmarkFilms(tmpRoot) {
+  console.log('5. Verifying all slim benchmark & showcase examples (G1-G7)...');
+  const films = [
+    'smoke-test',
+    '01-single-seed',
+    '02-ui-workflow',
+    '03-brand-reel-vertical',
+    '04-agentic-ai',
+    '05-content-creation',
+  ];
+  const activeWs = resolveWorkspaceDir();
+
   for (const slug of films) {
-    const dir = path.join(CASES_DIR, slug);
-    assert.equal(fs.existsSync(dir), true, `Missing film case: ${slug}`);
+    assert.equal(
+      fs.existsSync(path.join(EXAMPLES_DIR, slug)),
+      true,
+      `Missing slim example: ${slug}`
+    );
+    const dir = materializeExampleToDir(slug, path.join(tmpRoot, slug));
     await generateManifestForFilm(dir);
-    const hasDraft = fs.existsSync(path.join(dir, 'out', 'draft.mp4'));
+
+    const wsDraft = path.join(activeWs, slug, 'out', 'draft.mp4');
+    const hasDraft = fs.existsSync(wsDraft);
     const res = await runVerification(dir, {
       requireAudio: hasDraft,
-      videoPath: hasDraft ? path.join(dir, 'out', 'draft.mp4') : undefined,
+      videoPath: hasDraft ? wsDraft : undefined,
     });
     assert.equal(
       res.passed,
@@ -172,13 +186,22 @@ async function testBenchmarkFilms() {
 }
 
 async function main() {
+  const beforeSnap = snapshotSkillTree(SKILL_ROOT);
   const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'um-tests-'));
   try {
     await testMalformedBeatSheets(tmpRoot);
     await testGate7Violations(tmpRoot);
     await testBrandSwitching(tmpRoot);
-    await testCalibrationCases();
-    await testBenchmarkFilms();
+    await testCalibrationCases(tmpRoot);
+    await testBenchmarkFilms(tmpRoot);
+
+    const afterSnap = snapshotSkillTree(SKILL_ROOT);
+    assert.equal(
+      afterSnap,
+      beforeSnap,
+      'Read-only skill folder violation: files inside SKILL_ROOT were created or modified during test-suite execution!'
+    );
+    console.log('6. [OK] Read-only SKILL_ROOT invariant verified (zero files added or modified inside skill package).');
     console.log('\nALL TEST SUITE ASSERTIONS PASSED.\n');
   } finally {
     fs.rmSync(tmpRoot, { recursive: true, force: true });

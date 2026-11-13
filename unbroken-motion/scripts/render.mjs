@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   ensureDir,
+  ensureWorkingDirOutsideSkill,
   parseArgs,
   readJson,
   resolutionForAspect,
@@ -215,7 +216,10 @@ async function main() {
   }
 
   const isFinal = Boolean(flags.final);
-  const filmDir = resolveFilmDir(String(flags.film));
+  const filmDir = resolveFilmDir(String(flags.film), {
+    workspace: typeof flags.workspace === 'string' ? flags.workspace : null,
+  });
+  ensureWorkingDirOutsideSkill(filmDir);
   const beats = readJson(path.join(filmDir, 'beats.json'));
   const { tokens: brand } = syncFilmBrandJson(filmDir, beats.brand);
 
